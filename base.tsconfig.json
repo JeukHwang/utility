@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "ES2018",
+        "types": [],
+        "moduleResolution": "node",
+        "noPropertyAccessFromIndexSignature": false,
+        "strict": true,
+        "strictNullChecks": true,
+        "alwaysStrict": true
+    },
+    "rules": {
+        "no-any": true,
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-object-literal-type-assertion": "never",
+        "@typescript-eslint/no-non-null-assertion": "warn"
+    },
+    "extends": "@tsconfig/node16-strictest-esm/tsconfig.json"
+}

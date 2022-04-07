@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "outDir": "./build",
+        "rootDir": "./code"
+    },
+    "include": [
+        "./code"
+    ],
+    "extends": "./base.tsconfig.json"
+}
