@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Resolve } from "./type";
+import type { Resolve } from "../type";
 
 type RemotePromise<T> = { promise: Promise<T>, resolver: Resolve<T> };
 type Option<T> = Partial<{
@@ -13,7 +13,7 @@ class Waiter {
         this.waitMap = new Map();
     }
 
-    public getEvent<T>(eventName: string, args?:Option<T>): Promise<T> {
+    public getEvent<T>(eventName: string, args?:Option<T>): Promise<T> { // waitEvent
         const { promise } = this.accessEvent<T>(eventName);
         if (args.once) { this.deleteEvent(eventName); }
         if (args.timeLimit) {
@@ -22,9 +22,11 @@ class Waiter {
         }
         return promise;
     }
+
     public setEvent<T>(eventName: string, data: T): void {
         this.accessEvent<T>(eventName).resolver(data);
     }
+
     public deleteEvent(eventName: string): void {
         this.waitMap.delete(eventName);
     }
@@ -41,9 +43,9 @@ class Waiter {
         return promise;
     }
 
-    public static makeRemotePromise<T>(): RemotePromise<T> {
+    public static makeRemotePromise<T=void>(): RemotePromise<T> {
         let resolver:Resolve<T>;
-        const promise:Promise<T> = new Promise<T>((resolve:Resolve<T>) => { resolver = resolve; });
+        const promise:Promise<T> = new Promise<T>((resolve:Resolve<T>):void => { resolver = resolve; });
         return { promise, resolver };
     }
 }

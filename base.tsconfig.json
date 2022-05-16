@@ -1,7 +1,12 @@
 {
     "compilerOptions": {
         "target": "ES2018",
-        "types": [],
+        "lib": [
+            "DOM"
+        ],
+        "types": [
+            "react"
+        ],
         "moduleResolution": "node",
         "noPropertyAccessFromIndexSignature": false,
         "strict": true,
