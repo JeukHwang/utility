@@ -15,8 +15,8 @@ class Waiter {
 
     public getEvent<T>(eventName: string, args?:Option<T>): Promise<T> { // waitEvent
         const { promise } = this.accessEvent<T>(eventName);
-        if (args.once) { this.deleteEvent(eventName); }
-        if (args.timeLimit) {
+        if (args && args.once) { this.deleteEvent(eventName); }
+        if (args && args.timeLimit) {
             const timeLimit:Promise<T> = Waiter.waitTime<T>(args.timeLimit.timeInMS, args.timeLimit.value);
             return Promise.race<T>([promise, timeLimit]);
         }
@@ -32,19 +32,20 @@ class Waiter {
     }
 
     private accessEvent<T>(eventName: string): RemotePromise<T> {
-        if (this.waitMap.has(eventName)) { return this.waitMap.get(eventName); }
-        this.waitMap.set(eventName, Waiter.makeRemotePromise<T>());
-        return this.waitMap.get(eventName);
+        if (!this.waitMap.has(eventName)) {
+            this.waitMap.set(eventName, Waiter.makeRemotePromise<T>());
+        }
+        return this.waitMap.get(eventName) as RemotePromise<T>;
     }
 
-    public static waitTime<T=void>(timeInMS: number, value:T = undefined): Promise<T> {
+    public static waitTime<T=undefined>(timeInMS: number, value:T): Promise<T> {
         const { promise, resolver } = Waiter.makeRemotePromise<T>();
         setTimeout(resolver.bind(null, value), timeInMS);
         return promise;
     }
 
     public static makeRemotePromise<T=void>(): RemotePromise<T> {
-        let resolver:Resolve<T>;
+        let resolver:Resolve<T> = () => undefined;
         const promise:Promise<T> = new Promise<T>((resolve:Resolve<T>):void => { resolver = resolve; });
         return { promise, resolver };
     }
